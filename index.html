@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Sederhana</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .calculator {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .calculator input {
+            width: 100%;
+            height: 50px;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            text-align: right;
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+        .calculator button {
+            width: 23%;
+            height: 50px;
+            margin: 1%;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        .calculator button.operator {
+            background-color: #f9a825;
+            color: white;
+        }
+        .calculator button.equals {
+            background-color: #4caf50;
+            color: white;
+            width: 48%;
+        }
+        .calculator button.clear {
+            background-color: #d32f2f;
+            color: white;
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" disabled>
+        <div>
+            <button class="operator" onclick="inputOperator('+')">+</button>
+            <button class="operator" onclick="inputOperator('-')">-</button>
+            <button class="operator" onclick="inputOperator('*')">&times;</button>
+            <button class="operator" onclick="inputOperator('/')">&divide;</button>
+        </div>
+        <div>
+            <button onclick="inputDigit('7')">7</button>
+            <button onclick="inputDigit('8')">8</button>
+            <button onclick="inputDigit('9')">9</button>
+        </div>
+        <div>
+            <button onclick="inputDigit('4')">4</button>
+            <button onclick="inputDigit('5')">5</button>
+            <button onclick="inputDigit('6')">6</button>
+        </div>
+        <div>
+            <button onclick="inputDigit('1')">1</button>
+            <button onclick="inputDigit('2')">2</button>
+            <button onclick="inputDigit('3')">3</button>
+        </div>
+        <div>
+            <button onclick="inputDigit('0')">0</button>
+            <button onclick="inputDecimal('.')">.</button>
+            <button class="clear" onclick="clearDisplay()">AC</button>
+            <button class="equals" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+    <script>
+        let display = document.getElementById('display');
+        let currentInput = '';
+        let operator = null;
+        let firstOperand = null;
+
+        function inputDigit(digit) {
+            currentInput += digit;
+            display.value = currentInput;
+        }
+
+        function inputDecimal(dot) {
+            if (!currentInput.includes(dot)) {
+                currentInput += dot;
+                display.value = currentInput;
+            }
+        }
+
+        function inputOperator(op) {
+            if (currentInput === '') return;
+            if (firstOperand === null) {
+                firstOperand = parseFloat(currentInput);
+            } else if (operator) {
+                const result = performCalculation(firstOperand, parseFloat(currentInput), operator);
+                display.value = result;
+                firstOperand = result;
+            }
+            operator = op;
+            currentInput = '';
+        }
+
+        function performCalculation(first, second, operator) {
+            switch (operator) {
+                case '+':
+                    return first + second;
+                case '-':
+                    return first - second;
+                case '*':
+                    return first * second;
+                case '/':
+                    return first / second;
+                default:
+                    return second;
+            }
+        }
+
+        function calculateResult() {
+            if (firstOperand === null || currentInput === '') return;
+            const result = performCalculation(firstOperand, parseFloat(currentInput), operator);
+            display.value = result;
+            currentInput = '';
+            firstOperand = null;
+            operator = null;
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            firstOperand = null;
+            operator = null;
+            display.value = '';
+        }
+    </script>
+</body>
+</html>
